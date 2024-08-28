@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block styles %}
+    {{ bootstrap.load_css() }}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    {% endblock %}
+    <title>Image Colour Palette Generator</title>
+</head>
+<body>
+<div class="main">
+    <h1>Image Colour Palette Generator</h1>
+    <h2>Upload a picture <i class="bi bi-file-arrow-up-fill"></i></h2>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    <form class="file_upload" action="{{ url_for('upload_image') }}" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*">
+    <input class="btn btn-warning" type="submit" value="Upload">
+        <p><label>Number of colors:</label><br>
+    <input type="number" name="num_colors" value="10" required /></p>
+    <p><label>Delta:</label><br>
+    <input type="number" name="delta" value="24" required /></p>
+</form>
+
+    {% if picture %}
+    <h2>Picture <i class="bi bi-image"></i></i></h2>
+    <img src="{{ picture }}" width=100%>
+    <table>
+        <thead>
+            <tr>
+                <th>Color</th><th>Color Code</th><th>Count</th>
+            </tr>
+        </thead>
+    {% for color, count in colors %}
+        <tr>
+            <td style="background-color:{{ color }}"></td>
+            <td>{{ color }}</td>
+            <td>{{ count }}</td>
+            </tr>
+    {%  endfor %}
+    </table>
+{% endif %}
+</div>
+</body>
+</html>
